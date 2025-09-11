@@ -1,26 +1,26 @@
 <template>
-  <BaseLayout>
-    <h1 class="text-6xl my-10">Hello!</h1>
-    <button class="bg-blue-500 text-white rounded py-2 px-4" @click="increment()">
-      Számláló: {{ counter }}
-    </button>
-  </BaseLayout>
+  <BaseLayout />
+  <div class="p-6">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        a
+    </div>
+  </div>
 </template>
 
-<script>
-import BaseLayout from '@layouts/BaseLayout.vue'
-import { useCounter } from '@stores/CounterStore.mjs'
-import { mapState, mapActions } from 'pinia'
+<script setup>
+import { ref, onMounted } from "vue"
+import { http } from "@utils/http.mjs"
+import BaseLayout from "@layouts/BaseLayout.vue"
 
-export default {
-  components: {
-    BaseLayout
-  },
-  computed: {
-    ...mapState(useCounter, ['counter'])
-  },
-  methods: {
-    ...mapActions(useCounter, ['increment'])
+const products = ref([])
+
+onMounted(async () => {
+  try {
+    const { data } = await http.get("/products")
+    products.value = data
+  } 
+  catch (error) {
+    console.error("Failed to load products:", error)
   }
-}
+})
 </script>
