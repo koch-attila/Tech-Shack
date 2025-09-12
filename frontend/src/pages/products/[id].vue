@@ -20,7 +20,7 @@
           </p>
           <button
             class="mt-6 px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg"
-            
+            @click="addToCart"
           >
             Add to Cart
           </button>
@@ -84,6 +84,7 @@
 import { ref, onMounted } from "vue";
 import { useRoute } from "vue-router";
 import { http } from "@utils/http.mjs";
+import { useCartStore } from "@stores/CartStore.mjs";
 import BaseLayout from "@layouts/BaseLayout.vue";
 import { getCurrentInstance } from "vue";
 
@@ -94,6 +95,14 @@ const route = useRoute();
 const product = ref();
 const reviews = ref([]);
 const categories = ref([]);
+const cart = useCartStore();
+
+function addToCart() {
+  if (product.value) {
+    cart.addToCart(product.value);
+    alert("Product added to cart!");
+  }
+}
 
 onMounted(async () => {
   try {
@@ -101,6 +110,7 @@ onMounted(async () => {
     product.value = data;
 
     const reviewsRes = await http.get(`/products/${route.params.id}/ratings`);
+    console.log("reviews API response:", reviewsRes.data);
     reviews.value = Array.isArray(reviewsRes.data) ? reviewsRes.data : [];
     const categoriesRes = await http.get(`/products/${route.params.id}/categories`);
     categories.value = categoriesRes.data;
