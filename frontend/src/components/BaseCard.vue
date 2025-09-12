@@ -7,7 +7,7 @@
     >
       <img
         v-if="product.image"
-        :src="`/images/${product.image}`"
+        :src="`${baseUrl}/storage/products/${product.image}`"
         :alt="product.name"
         class="h-40 w-full object-contain rounded-xl mb-3 bg-white"
       />
@@ -19,10 +19,15 @@
 </template>
 
 <script setup>
+import { getCurrentInstance } from "vue";
+const { appContext } = getCurrentInstance();
+
 defineProps({
   product: {
     type: Object,
     required: true
   }
 })
+
+const baseUrl = appContext.config.globalProperties.$backendUrl;
 </script>

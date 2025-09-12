@@ -10,6 +10,7 @@ import App from '@/App.vue'
 import '@assets/app.scss'
 
 const app = createApp(App)
+app.config.globalProperties.$backendUrl = "http://backend.vm1.test";
 
 const pinia = createPinia()
 pinia.use(piniaPluginPersistedstate)
