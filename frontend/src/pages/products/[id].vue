@@ -110,7 +110,6 @@ onMounted(async () => {
     product.value = data;
 
     const reviewsRes = await http.get(`/products/${route.params.id}/ratings`);
-    console.log("reviews API response:", reviewsRes.data);
     reviews.value = Array.isArray(reviewsRes.data) ? reviewsRes.data : [];
     const categoriesRes = await http.get(`/products/${route.params.id}/categories`);
     categories.value = categoriesRes.data;
