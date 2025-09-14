@@ -19,7 +19,7 @@ return [
 
     'allowed_methods' => ['*'],
 
-    'allowed_origins' => ['*'],
+    'allowed_origins' => ['http://frontend.vm1.test', 'http://frontend.vm1.test:5173'],
 
     'allowed_origins_patterns' => [],
 

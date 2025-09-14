@@ -22,6 +22,10 @@ Route::get('/products/{product}/categories', [ProductController::class, 'categor
 Route::get('/categories/{category}/products', [CategoryController::class, 'products']);
 Route::get('/ratings/{rating}/users', [RatingController::class, 'user']);
 
-Route::get('/me', function (Request $request) {
-    return $request->user();
-})->middleware('auth:sanctum');
+Route::prefix('auth')->group(function () {
+    Route::post('/register', [AuthController::class, 'register']);
+    Route::post('/login', [AuthController::class, 'login']);
+    Route::post('/logout', [AuthController::class, 'logout']);
+    
+    Route::get('/me', [AuthController::class, 'me'])->middleware('auth:sanctum');
+});

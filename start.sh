@@ -18,7 +18,7 @@ docker compose up -d
 
 docker compose exec backend composer install
 
-docker compose exec backend php artisan migrate
+docker compose exec backend php artisan migrate --seed
 
 if [ -z "${APP_KEY}" ]; then
     docker compose exec backend php artisan key:generate
