@@ -26,6 +26,12 @@ export const useAuthStore = defineStore("auth", {
         await this.fetchUser();
         return true;
       } catch (error) {
+        if (error.response?.status === 419) {
+          await http.get('/sanctum/csrf-cookie', { baseURL: "http://backend.vm1.test", withCredentials: true });
+          await http.post("/auth/login", payload);
+          await this.fetchUser();
+          return true;
+        }
         throw error;
       }
     },
@@ -38,7 +44,24 @@ export const useAuthStore = defineStore("auth", {
       }
     },
     async logout() {
-      await http.post("/auth/logout");
+      function deleteCookie(name, domain = '.vm1.test') {
+        document.cookie = `${name}=; Max-Age=0; path=/; domain=${domain};`;
+      }
+
+      try {
+        await http.get('/sanctum/csrf-cookie', { baseURL: "http://backend.vm1.test", withCredentials: true });
+        await http.post("/auth/logout");
+      } catch (error) {
+        if (error.response?.status === 419) {
+          deleteCookie('tech_shack_session');
+          deleteCookie('XSRF-TOKEN');
+          this.user = null;
+          return;
+        }
+        throw error;
+      }
+      deleteCookie('tech_shack_session');
+      deleteCookie('XSRF-TOKEN');
       this.user = null;
     },
   },

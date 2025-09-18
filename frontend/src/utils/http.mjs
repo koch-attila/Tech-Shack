@@ -10,3 +10,14 @@ export const http = axios.create({
         "Content-Type": "application/json" 
     }
 })
+
+http.interceptors.request.use(config => {
+    const xsrfToken = document.cookie
+        .split('; ')
+        .find(row => row.startsWith('XSRF-TOKEN='))
+        ?.split('=')[1];
+    if (xsrfToken) {
+        config.headers['X-XSRF-TOKEN'] = decodeURIComponent(xsrfToken);
+    }
+    return config;
+});

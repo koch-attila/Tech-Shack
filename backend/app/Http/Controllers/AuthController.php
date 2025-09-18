@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
 
@@ -16,19 +17,16 @@ class AuthController extends Controller
             'email'    => 'required|string|email|unique:users,email',
             'password' => 'required|string|min:8|confirmed',
         ]);
-
+        
         $user = User::create([
             'name'     => $fields['name'],
             'email'    => $fields['email'],
             'password' => Hash::make($fields['password']),
         ]);
+        
+        Auth::guard('web')->login($user);
 
-        $token = $user->createToken('auth_token')->plainTextToken;
-
-        return response()->json([
-            'user'  => $user,
-            'token' => $token,
-        ], 201);
+        return response()->json(['user' => $user], 201);
     }
 
     public function login(Request $request)
@@ -46,21 +44,16 @@ class AuthController extends Controller
             ]);
         }
 
-        $token = $user->createToken('auth_token')->plainTextToken;
+        Auth::guard('web')->login($user);
 
-        return response()->json([
-            'user'  => $user,
-            'token' => $token,
-        ]);
+        return response()->json(['user' => $user]);
     }
 
     public function logout(Request $request)
     {
-        $request->user()->tokens()->delete();
+        Auth::guard('web')->logout();
 
-        return response()->json([
-            'message' => 'Logged out successfully',
-        ]);
+        return response()->json(['message' => 'Logged out successfully']);
     }
 
     public function me(Request $request)
