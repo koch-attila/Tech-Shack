@@ -15,7 +15,8 @@ class OrderController extends Controller
      */
     public function index()
     {
-        return Order::with('items.product')->get();
+        $user = auth()->user();
+        return Order::with('items.product')->where('user_id', $user->id)->get();
     }
 
     /**

@@ -14,8 +14,9 @@ Route::get('/user', function (Request $request) {
 })->middleware('auth:sanctum');
 Route::apiResource('products', ProductController::class);
 Route::apiResource('categories', CategoryController::class);
-Route::apiResource('orders', OrderController::class);
 Route::apiResource('ratings', RatingController::class);
+Route::apiResource('orders', OrderController::class)->except(['index']);
+Route::get('/orders', [OrderController::class, 'index'])->middleware('auth:sanctum');
 
 Route::get('/products/{product}/ratings', [ProductController::class, 'ratings']);
 Route::get('/products/{product}/categories', [ProductController::class, 'categories']);
