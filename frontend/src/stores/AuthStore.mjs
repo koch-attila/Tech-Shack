@@ -9,6 +9,10 @@ export const useAuthStore = defineStore("auth", {
     isAuthenticated: (state) => !!state.user,
   },
   actions: {
+    deleteCookie(name, domain = '.vm1.test') {
+      document.cookie = `${name}=; Max-Age=0; path=/; domain=${domain};`;
+    },
+
     async register(payload) {
       try {
         await http.get('/sanctum/csrf-cookie', { baseURL: "http://backend.vm1.test", withCredentials: true });
@@ -16,6 +20,14 @@ export const useAuthStore = defineStore("auth", {
         await this.fetchUser();
         return true;
       } catch (error) {
+        if (error.response?.status === 419) {
+          this.deleteCookie('tech_shack_session');
+          this.deleteCookie('XSRF-TOKEN');
+          await http.get('/sanctum/csrf-cookie', { baseURL: "http://backend.vm1.test", withCredentials: true });
+          await http.post("/auth/register", payload);
+          await this.fetchUser();
+          return true;
+        }
         throw error;
       }
     },
@@ -27,6 +39,8 @@ export const useAuthStore = defineStore("auth", {
         return true;
       } catch (error) {
         if (error.response?.status === 419) {
+          deleteCookie('tech_shack_session');
+          deleteCookie('XSRF-TOKEN');
           await http.get('/sanctum/csrf-cookie', { baseURL: "http://backend.vm1.test", withCredentials: true });
           await http.post("/auth/login", payload);
           await this.fetchUser();
@@ -44,24 +58,17 @@ export const useAuthStore = defineStore("auth", {
       }
     },
     async logout() {
-      function deleteCookie(name, domain = '.vm1.test') {
-        document.cookie = `${name}=; Max-Age=0; path=/; domain=${domain};`;
-      }
-
       try {
         await http.get('/sanctum/csrf-cookie', { baseURL: "http://backend.vm1.test", withCredentials: true });
         await http.post("/auth/logout");
       } catch (error) {
-        if (error.response?.status === 419) {
-          deleteCookie('tech_shack_session');
-          deleteCookie('XSRF-TOKEN');
-          this.user = null;
-          return;
-        }
-        throw error;
+        this.deleteCookie('tech_shack_session');
+        this.deleteCookie('XSRF-TOKEN');
+        this.user = null;
+        return;
       }
-      deleteCookie('tech_shack_session');
-      deleteCookie('XSRF-TOKEN');
+      this.deleteCookie('tech_shack_session');
+      this.deleteCookie('XSRF-TOKEN');
       this.user = null;
     },
   },

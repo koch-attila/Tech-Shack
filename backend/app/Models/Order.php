@@ -9,7 +9,20 @@ class Order extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['user_id'];
+    protected $fillable = [
+        'user_id',
+        'name',
+        'email',
+        'billing_address',
+        'billing_city',
+        'billing_postal_code',
+        'delivery_address',
+        'delivery_city',
+        'delivery_postal_code',
+        'phone',
+        'status',
+        'total'
+    ];
 
     protected $casts = [
         'total' => 'decimal:2',

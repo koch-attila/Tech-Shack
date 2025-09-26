@@ -6,6 +6,7 @@ use App\Http\Requests\StoreOrderRequest;
 use App\Http\Requests\UpdateOrderRequest;
 use App\Models\Order;
 use App\Models\Product;
+use Illuminate\Support\Facades\Auth;
 
 class OrderController extends Controller
 {
@@ -25,9 +26,30 @@ class OrderController extends Controller
         $request->validated();
 
         $order = Order::create([
-            'user_id' => $request->user_id,
+            'user_id' => Auth::id(),
+            'name' => $request->name,
+            'email' => $request->email,
+            'billing_address' => $request->billing_address,
+            'billing_city' => $request->billing_city,
+            'billing_postal_code' => $request->billing_postal_code,
+            'delivery_address' => $request->delivery_address,
+            'delivery_city' => $request->delivery_city,
+            'delivery_postal_code' => $request->delivery_postal_code,
+            'phone' => $request->phone,
             'status' => 'pending',
         ]);
+
+        if (Auth::check()) {
+            $user = Auth::user();
+            $user->delivery_address = $request->delivery_address;
+            $user->delivery_city = $request->delivery_city;
+            $user->delivery_postal_code = $request->delivery_postal_code;
+            $user->billing_address = $request->billing_address;
+            $user->billing_city = $request->billing_city;
+            $user->billing_postal_code = $request->billing_postal_code;
+            $user->phone = $request->phone;
+            $user->save();
+        }
 
         $total = 0;
 

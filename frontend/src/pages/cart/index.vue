@@ -54,60 +54,219 @@
           <span>${{ cart.total }}</span>
         </div>
 
-        <button
-          class="mt-6 px-6 py-3 bg-green-600 hover:bg-green-700 text-white rounded-lg w-full"
-          @click="checkout"
-        >
-          Checkout
-        </button>
+        <form @submit.prevent="checkout" class="mt-6">
+          <div class="mb-4">
+            <label class="block text-gray-700 dark:text-gray-300">Name</label>
+            <input
+              v-model="form.name"
+              required
+              class="form-input"
+              placeholder="Enter your name"
+            />
+          </div>
+          <div class="mb-4">
+            <label class="block text-gray-700 dark:text-gray-300">Email</label>
+            <input
+              v-model="form.email"
+              type="email"
+              required
+              class="form-input"
+              placeholder="Enter your email"
+            />
+          </div>
+
+          <div class="mb-4">
+            <label class="block text-gray-700 dark:text-gray-300">Delivery Address</label>
+            <input
+              v-model="form.delivery_address"
+              required
+              class="form-input"
+              placeholder="Street address"
+            />
+          </div>
+          <div class="mb-4">
+            <label class="block text-gray-700 dark:text-gray-300">Delivery City</label>
+            <input
+              v-model="form.delivery_city"
+              required
+              class="form-input"
+              placeholder="City"
+            />
+          </div>
+          <div class="mb-4">
+            <label class="block text-gray-700 dark:text-gray-300">Delivery Postal Code</label>
+            <input
+              v-model="form.delivery_postal_code"
+              required
+              class="form-input"
+              placeholder="Postal Code"
+            />
+          </div>
+
+          <div class="mb-4">
+            <label class="block text-gray-700 dark:text-gray-300">
+              <input type="checkbox" v-model="showBilling" />
+                Use a different billing address
+            </label>
+          </div>
+
+          <div v-if="showBilling">
+            <div class="mb-4">
+              <label class="block text-gray-700 dark:text-gray-300">Billing Address</label>
+              <input
+                v-model="form.billing_address"
+                required
+                class="form-input"
+                placeholder="Street address"
+              />
+            </div>
+            <div class="mb-4">
+              <label class="block text-gray-700 dark:text-gray-300">Billing City</label>
+              <input
+                v-model="form.billing_city"
+                required
+                class="form-input"
+                placeholder="City"
+              />
+            </div>
+            <div class="mb-4">
+              <label class="block text-gray-700 dark:text-gray-300">Billing Postal Code</label>
+              <input
+                v-model="form.billing_postal_code"
+                required
+                class="form-input"
+                placeholder="Postal Code"
+              />
+            </div>
+          </div>
+
+
+          <div class="mb-4">
+            <label class="block text-gray-700 dark:text-gray-300">Phone</label>
+            <input
+              v-model="form.phone"
+              required
+              class="form-input"
+              placeholder="Enter your phone number"
+            />
+          </div>
+          <button
+            type="submit"
+            class="btn btn-success w-full px-6 py-3 rounded-lg"
+          >
+            Checkout
+          </button>
+        </form>
       </div>
     </div>
   </BaseLayout>
 </template>
 
 <script setup>
+import { ref, onMounted, watch } from "vue";
+import { useAuthStore } from "@stores/AuthStore.mjs";
 import { useCartStore } from "@stores/CartStore.mjs";
 import { http } from "@utils/http.mjs";
 import BaseLayout from "@layouts/BaseLayout.vue";
 
+const auth = useAuthStore();
 const cart = useCartStore();
 
-async function removeItem(item){
+const form = ref({
+  name: "",
+  email: "",
+  billing_address: "",
+  billing_city: "",
+  billing_postal_code: "",
+  delivery_address: "",
+  delivery_city: "",
+  delivery_postal_code: "",
+  phone: ""
+});
+const showBilling = ref(false);
+
+onMounted(() => {
+  if (auth.user) {
+    form.value.name = auth.user.name || "";
+    form.value.email = auth.user.email || "";
+    form.value.phone = auth.user.phone || "";
+    form.value.delivery_address = auth.user.delivery_address || "";
+    form.value.delivery_city = auth.user.delivery_city || "";
+    form.value.delivery_postal_code = auth.user.delivery_postal_code || "";
+    
+    if (showBilling.value) {
+      form.value.billing_address = auth.user.billing_address || "";
+      form.value.billing_city = auth.user.billing_city || "";
+      form.value.billing_postal_code = auth.user.billing_postal_code || "";
+    }
+  }
+});
+
+watch(() => auth.user, (user) => {
+  if (user) {
+    form.value.name = user.name || "";
+    form.value.email = user.email || "";
+    form.value.phone = user.phone || "";
+    form.value.delivery_address = user.delivery_address || "";
+    form.value.delivery_city = user.delivery_city || "";
+    form.value.delivery_postal_code = user.delivery_postal_code || "";
+    if (showBilling.value) {
+      form.value.billing_address = user.billing_address || "";
+      form.value.billing_city = user.billing_city || "";
+      form.value.billing_postal_code = user.billing_postal_code || "";
+    }
+  }
+});
+
+watch(
+  () => [form.value.delivery_address, form.value.delivery_city, form.value.delivery_postal_code, showBilling.value],
+  ([address, city, postal, billingShown]) => {
+    if (!billingShown) {
+      form.value.billing_address = address;
+      form.value.billing_city = city;
+      form.value.billing_postal_code = postal;
+    }
+  }
+);
+
+async function removeItem(productId){
   if (window.confirm('Are you sure you want to remove this item from the cart?')){
-    cart.removeFromCart(item);
+    cart.removeFromCart(productId);
   }
 }
 
 async function checkout() {
   if (cart.items.length === 0) return;
 
+  if (!showBilling.value) {
+    form.value.billing_address = form.value.delivery_address;
+    form.value.billing_city = form.value.delivery_city;
+    form.value.billing_postal_code = form.value.delivery_postal_code;
+  }
+
   try {
     const payload = {
-      user_id: 1,
+      ...form.value,
       items: cart.items.map(item => ({
         product_id: item.product.id,
         quantity: item.quantity
       }))
     };
-
-    const response = await http.post('orders', payload);
-    const data = response.data;
-
-    console.log('Order created:', data);
+    await http.post("/orders", payload);
     cart.clearCart();
-
-    alert('Order placed successfully!');
-  } 
-  catch (error) {
-    if (error.response) {
-      console.error('Server responded with an error:', error);
-      alert('Something went wrong during the checkout process. Please try again.');
-    } 
-    else {
-      console.error(error);
-      alert('Something went wrong. Please try again.');
-    }
+    alert("Order placed successfully!");
+  } catch (error) {
+    alert("Checkout failed: " + (error.response?.data?.message || error.message));
   }
 }
-
 </script>
+
+<style scoped>
+.form-input {
+  @apply w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500;
+}
+
+.btn-success {
+  @apply bg-green-600 text-white font-bold py-2 px-4 rounded-lg shadow-md hover:bg-green-700 transition;
+}
+</style>

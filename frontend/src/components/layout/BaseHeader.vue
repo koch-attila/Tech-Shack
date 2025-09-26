@@ -1,54 +1,24 @@
 <template>
-  <header
-    class="w-full bg-white dark:bg-gray-900 shadow-md px-6 py-3 flex items-center justify-between"
-  >
-    <router-link
-      to="/"
-      class="text-xl font-bold text-gray-800 dark:text-white"
-    >
+  <header class="w-full bg-white dark:bg-gray-900 shadow-md px-6 py-3 flex items-center justify-between">
+    <router-link to="/" class="text-xl font-bold text-gray-800 dark:text-white">
       Tech Shack
     </router-link>
 
     <nav class="hidden md:flex space-x-6">
-      <router-link
-        to="/"
-        class="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400;"
-      >
-        Home
-      </router-link>
-      <router-link
-        to="/categories"
-        class="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400;"
-      >
-        Categories
-      </router-link>
-      <router-link
-        to="/cart"
-        class="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400;"
-      >
-        Cart
-      </router-link>
+      <router-link to="/" class="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400;">Home</router-link>
+      <router-link to="/categories" class="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400;">Categories</router-link>
+      <router-link to="/cart" class="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400;">Cart</router-link>
     </nav>
 
-    <div class="flex items-center gap-4">
-      <template v-if="auth.isAuthenticated">
-        <span class="text-gray-700 dark:text-gray-300">
-          Hi, {{ auth.user?.name }}
-        </span>
-        <button
-          @click="handleLogout"
-          class="bg-red-500 px-3 py-1 rounded-lg text-white hover:bg-red-600"
-        >
-          Logout
-        </button>
+    <div class="flex items-center space-x-3">
+      <template v-if="!auth.isAuthenticated">
+        <router-link to="/auth/login" class="px-3 py-1 rounded text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800">Login</router-link>
+        <router-link to="/auth/register" class="px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700">Register</router-link>
       </template>
+
       <template v-else>
-        <router-link
-          to="/auth/login"
-          class="bg-blue-500 px-3 py-1 rounded-lg text-white hover:bg-blue-600"
-        >
-          Login
-        </router-link>
+        <span class="text-gray-800 dark:text-gray-200 mr-2">{{ auth.user?.name }}</span>
+        <button @click="logout" class="px-3 py-1 rounded bg-red-500 text-white hover:bg-red-600">Logout</button>
       </template>
 
       <button
@@ -64,22 +34,21 @@
 
 <script setup>
 import { ref, onMounted } from "vue";
-import { useAuthStore } from "@/stores/AuthStore.mjs";
-import { useRouter } from "vue-router";
+import { useAuthStore } from "@stores/AuthStore.mjs";
 
 const isDark = ref();
 const auth = useAuthStore();
-const router = useRouter();
 
 onMounted(() => {
   const saved = localStorage.getItem("theme");
-  if (
-    saved === "dark" ||
-    (!saved && window.matchMedia("(prefers-color-scheme: dark)").matches)
-  ) {
+  if (saved === "dark" || (!saved && window.matchMedia("(prefers-color-scheme: dark)").matches)) {
     isDark.value = true;
     document.documentElement.classList.add("dark");
+  } else {
+    isDark.value = false;
   }
+
+  auth.fetchUser().catch(() => {});
 });
 
 const toggleDarkMode = () => {
@@ -93,8 +62,8 @@ const toggleDarkMode = () => {
   }
 };
 
-function handleLogout() {
-  auth.logout();
-  router.push("/");
+async function logout() {
+  await auth.logout();
+  window.location.href = "/";
 }
 </script>

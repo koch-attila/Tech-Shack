@@ -22,7 +22,15 @@ class StoreOrderRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'user_id' => 'required|exists:users,id',
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|max:255',
+            'billing_address' => 'required|string|max:255',
+            'billing_city' => 'required|string|max:255',
+            'billing_postal_code' => ['required', 'string', 'regex:/^\d{4}$/'],
+            'delivery_address' => 'required|string|max:255',
+            'delivery_city' => 'required|string|max:255',
+            'delivery_postal_code' => ['required', 'string', 'regex:/^\d{4}$/'],
+            'phone' => ['required', 'string', 'max:20', 'regex:/^(?:\+36|06)\d{8,9}$/'],
             'items' => 'required|array|min:1',
             'items.*.product_id' => 'required|exists:products,id',
             'items.*.quantity' => 'required|integer|min:1'
