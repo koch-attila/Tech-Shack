@@ -1,6 +1,6 @@
 Ez a repository akkor készült, miután a projekt nagy része elkészült egy másik repositoryban. A commitok újra lettek játszva hogy a természetes fejlesztői folyamatomat tükrözzék.
 
-# Fullstack 2024
+# Tech-Shack
 
 Figyelem! Az `.env.example` fájl a `backend` mappában található, és a `.env` fájl is ott lesz, mert a backend szerves része. Mivel ezt a többi container is használja, így egy hivatkozás jön létre indításkor a projektmappában.
 
