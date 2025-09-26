@@ -21,6 +21,8 @@ tags:
     description: CSRF protection
   - name: User
     description: User profile
+  - name: Admin
+    description: Admin operations
 
 paths:
   /auth/register:
@@ -170,6 +172,114 @@ paths:
       responses:
         '204':
           description: CSRF cookie set
+
+  /admin/products:
+    get:
+      tags: [Admin, Products]
+      summary: List all products (admin)
+      security:
+        - sanctumAuth: []
+      responses:
+        '200':
+          description: Product list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Product'
+    post:
+      tags: [Admin, Products]
+      summary: Create product (admin)
+      security:
+        - sanctumAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Product'
+      responses:
+        '201':
+          description: Product created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+
+  /admin/products/{id}:
+    put:
+      tags: [Admin, Products]
+      summary: Update product (admin)
+      security:
+        - sanctumAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Product'
+      responses:
+        '200':
+          description: Product updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+    delete:
+      tags: [Admin, Products]
+      summary: Delete product (admin)
+      security:
+        - sanctumAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Product deleted
+
+  /admin/orders:
+    get:
+      tags: [Admin, Orders]
+      summary: List all orders (admin)
+      security:
+        - sanctumAuth: []
+      responses:
+        '200':
+          description: Order list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Order'
+
+  /admin/users:
+    get:
+      tags: [Admin, Users]
+      summary: List all users (admin)
+      security:
+        - sanctumAuth: []
+      responses:
+        '200':
+          description: User list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+
+  # ...add other admin endpoints as needed...
 
 components:
   securitySchemes:

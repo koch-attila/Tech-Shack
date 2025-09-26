@@ -32,16 +32,28 @@ A Tech-Shack egy Laravel (backend) + Vue.js (frontend) alapú webalkalmazás, am
 
 ## 4. Főbb API végpontok
 
-| Módszer | Útvonal                | Leírás                        | Auth |
-|---------|------------------------|-------------------------------|------|
-| POST    | /api/auth/register     | Regisztráció                  | -    |
-| POST    | /api/auth/login        | Bejelentkezés                 | -    |
-| POST    | /api/auth/logout       | Kijelentkezés                 | igen |
-| GET     | /api/auth/me           | Saját adatok lekérdezése      | igen |
-| GET     | /api/products          | Termékek listázása            | -    |
-| POST    | /api/orders            | Rendelés leadása              | igen/guest |
-| GET     | /api/orders            | Saját rendelések lekérdezése  | igen |
-| GET     | /sanctum/csrf-cookie   | CSRF token lekérése           | -    |
+| Módszer | Útvonal                      | Leírás                        | Auth         |
+|---------|------------------------------|-------------------------------|--------------|
+| POST    | /api/auth/register           | Regisztráció                  | -            |
+| POST    | /api/auth/login              | Bejelentkezés                 | -            |
+| POST    | /api/auth/logout             | Kijelentkezés                 | igen         |
+| GET     | /api/auth/me                 | Saját adatok lekérdezése      | igen         |
+| GET     | /api/products                | Termékek listázása            | -            |
+| GET     | /api/products/{id}           | Termék részletei              | -            |
+| POST    | /api/orders                  | Rendelés leadása              | igen/guest   |
+| GET     | /api/orders                  | Saját rendelések lekérdezése  | igen         |
+| GET     | /sanctum/csrf-cookie         | CSRF token lekérése           | -            |
+| GET     | /admin/products              | Termékek listázása (admin)    | admin        |
+| POST    | /admin/products              | Termék létrehozása (admin)    | admin        |
+| PUT     | /admin/products/{id}         | Termék frissítése (admin)     | admin        |
+| DELETE  | /admin/products/{id}         | Termék törlése (admin)        | admin        |
+| GET     | /admin/orders                | Összes rendelés listázása     | admin        |
+| PUT     | /admin/orders/{id}           | Rendelés státusz frissítése   | admin        |
+| DELETE  | /admin/orders/{id}           | Rendelés törlése              | admin        |
+| GET     | /admin/users                 | Felhasználók listázása        | admin        |
+| GET     | /admin/users/{id}            | Felhasználó részletei         | admin        |
+| PUT     | /admin/users/{id}            | Felhasználó frissítése        | admin        |
+| DELETE  | /admin/users/{id}            | Felhasználó törlése           | admin        |
 
 ---
 
@@ -63,9 +75,9 @@ A Tech-Shack egy Laravel (backend) + Vue.js (frontend) alapú webalkalmazás, am
 
 ## 6. Jogosultságok
 
-- **Vendég:** Böngészés, regisztráció, bejelentkezés, rendelés leadása (ha engedélyezett)
+- **Vendég:** Böngészés, regisztráció, bejelnetkezés, rendelés leadása
 - **Felhasználó:** Saját rendelések, profil szerkesztése
-- **Admin:** Termékek, rendelések, felhasználók kezelése
+- **Admin:** Termékek, rendelések, felhasználók teljes kezelése az `/admin/*` végpontokon
 
 ---
 
@@ -87,9 +99,8 @@ A Tech-Shack egy Laravel (backend) + Vue.js (frontend) alapú webalkalmazás, am
 
 ## 9. Bővíthetőség
 
-- Új API végpont: `routes/api.php` + új Controller
-- Új frontend oldal: `src/pages/` + router bővítése
-- Új adatmező: migráció + model `$fillable` + validáció
+- Új admin végpont: `routes/api.php` + admin middleware
+- Új admin funkció: controller metódus + admin route
 
 ---
 

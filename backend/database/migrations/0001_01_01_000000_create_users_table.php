@@ -24,6 +24,7 @@ return new class extends Migration
             $table->string('billing_city')->nullable();
             $table->string('billing_postal_code')->nullable();
             $table->string('phone')->nullable();
+            $table->boolean('is_admin')->default(false);
             $table->rememberToken();
             $table->timestamps();
         });
