@@ -1,9 +1,9 @@
 <template>
   <BaseLayout>
     <div class="max-w-3xl mx-auto py-10">
-      <h1 class="text-3xl font-bold mb-6 text-gray-900 dark:text-white">My Orders</h1>
+      <h1 class="text-3xl font-bold mb-6 text-gray-900 dark:text-white">{{ $t('pages.orders.title') }}</h1>
       <div v-if="orders.length === 0" class="text-gray-600 dark:text-gray-400">
-        You have no orders yet.
+        {{ $t('pages.orders.empty') }}
       </div>
       <div v-else class="space-y-6">
         <div
@@ -13,35 +13,35 @@
         >
           <div class="flex justify-between items-center mb-2">
             <span class="font-semibold text-lg text-gray-800 dark:text-gray-200">
-              Order #{{ order.id }}
+              {{ $t('pages.orders.order', { id: order.id }) }}
             </span>
             <span class="text-sm text-gray-500 dark:text-gray-400">
               {{ new Date(order.created_at).toLocaleDateString() }}
             </span>
           </div>
           <div class="mb-2">
-            <span class="font-medium text-gray-700 dark:text-gray-300">Status:</span>
+            <span class="font-medium text-gray-700 dark:text-gray-300">{{ $t('pages.orders.status') }}:</span>
             <span class="ml-2 text-blue-600 dark:text-blue-400">{{ order.status }}</span>
           </div>
           <div class="mb-2">
-            <span class="font-medium text-gray-700 dark:text-gray-300">Total:</span>
+            <span class="font-medium text-gray-700 dark:text-gray-300">{{ $t('pages.orders.total') }}:</span>
             <span class="ml-2 text-green-600 dark:text-green-400 font-semibold">
               ${{ order.total }}
             </span>
           </div>
           <div class="mb-2">
-            <span class="font-medium text-gray-700 dark:text-gray-300">Delivery Address:</span>
+            <span class="font-medium text-gray-700 dark:text-gray-300">{{ $t('pages.orders.delivery') }}:</span>
             <span class="ml-2 text-gray-700 dark:text-gray-300">{{ order.delivery_address }}, {{ order.delivery_city }} {{ order.delivery_postal_code }}</span>
           </div>
           <div>
-            <span class="font-medium text-gray-700 dark:text-gray-300">Items:</span>
+            <span class="font-medium text-gray-700 dark:text-gray-300">{{ $t('pages.orders.items') }}:</span>
             <ul class="list-disc ml-6 mt-1">
               <li
                 v-for="item in order.items"
                 :key="item.id"
                 class="text-gray-700 dark:text-gray-200"
               >
-                {{ item.product?.name || 'Product' }} x {{ item.quantity }}
+                {{ item.product?.name || $t('pages.orders.product') }} x {{ item.quantity }}
               </li>
             </ul>
           </div>

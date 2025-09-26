@@ -8,7 +8,7 @@
       </div>
 
       <div v-if="!products.length" class="text-gray-600 dark:text-gray-400">
-        No products found in this category.
+        {{ $t('pages.categories.empty') }}
       </div>
       <div v-else class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         <div
@@ -28,6 +28,9 @@
               </h3>
               <p class="mt-2 text-blue-600 dark:text-blue-400 font-semibold">
                 ${{ product.price }}
+              </p>
+              <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">
+                {{ $t('pages.categories.viewProducts') }}
               </p>
             </div>
           </router-link>

@@ -1,10 +1,10 @@
 <template>
   <BaseLayout>
     <div class="max-w-3xl mx-auto py-10">
-      <h1 class="text-2xl font-bold mb-6 text-gray-900 dark:text-white">Your Cart</h1>
+      <h1 class="text-2xl font-bold mb-6 text-gray-900 dark:text-white">{{ $t('pages.cart.title') }}</h1>
 
       <div v-if="cart.items.length === 0" class="text-gray-600 dark:text-gray-400">
-        Your cart is empty.
+        {{ $t('pages.cart.empty') }}
       </div>
 
       <div v-else class="space-y-4">
@@ -44,117 +44,116 @@
               class="text-white bg-red-500 p-3 rounded-lg hover:text-red-700 ml-5"
               @click="removeItem(item.product.id)"
             >
-              Remove
+              {{ $t('pages.cart.remove') }}
             </button>
           </div>
         </div>
 
         <div class="flex justify-between font-bold text-xl mt-6 text-gray-900 dark:text-white">
-          <span>Total:</span>
+          <span>{{ $t('pages.cart.total') }}:</span>
           <span>${{ cart.total }}</span>
         </div>
 
         <form @submit.prevent="checkout" class="mt-6">
           <div class="mb-4">
-            <label class="block text-gray-700 dark:text-gray-300">Name</label>
+            <label class="block text-gray-700 dark:text-gray-300">{{ $t('pages.cart.name') }}</label>
             <input
               v-model="form.name"
               required
               class="form-input"
-              placeholder="Enter your name"
+              :placeholder="$t('pages.cart.name')"
             />
           </div>
           <div class="mb-4">
-            <label class="block text-gray-700 dark:text-gray-300">Email</label>
+            <label class="block text-gray-700 dark:text-gray-300">{{ $t('pages.cart.email') }}</label>
             <input
               v-model="form.email"
               type="email"
               required
               class="form-input"
-              placeholder="Enter your email"
+              :placeholder="$t('pages.cart.email')"
             />
           </div>
 
           <div class="mb-4">
-            <label class="block text-gray-700 dark:text-gray-300">Delivery Address</label>
+            <label class="block text-gray-700 dark:text-gray-300">{{ $t('pages.cart.delivery_address') }}</label>
             <input
               v-model="form.delivery_address"
               required
               class="form-input"
-              placeholder="Street address"
+              :placeholder="$t('pages.cart.delivery_address')"
             />
           </div>
           <div class="mb-4">
-            <label class="block text-gray-700 dark:text-gray-300">Delivery City</label>
+            <label class="block text-gray-700 dark:text-gray-300">{{ $t('pages.cart.delivery_city') }}</label>
             <input
               v-model="form.delivery_city"
               required
               class="form-input"
-              placeholder="City"
+              :placeholder="$t('pages.cart.delivery_city')"
             />
           </div>
           <div class="mb-4">
-            <label class="block text-gray-700 dark:text-gray-300">Delivery Postal Code</label>
+            <label class="block text-gray-700 dark:text-gray-300">{{ $t('pages.cart.delivery_postal_code') }}</label>
             <input
               v-model="form.delivery_postal_code"
               required
               class="form-input"
-              placeholder="Postal Code"
+              :placeholder="$t('pages.cart.delivery_postal_code')"
             />
           </div>
 
           <div class="mb-4">
             <label class="block text-gray-700 dark:text-gray-300">
               <input type="checkbox" v-model="showBilling" />
-                Use a different billing address
+                {{ $t('pages.cart.use_different_billing') }}
             </label>
           </div>
 
           <div v-if="showBilling">
             <div class="mb-4">
-              <label class="block text-gray-700 dark:text-gray-300">Billing Address</label>
+              <label class="block text-gray-700 dark:text-gray-300">{{ $t('pages.cart.billing_address') }}</label>
               <input
                 v-model="form.billing_address"
                 required
                 class="form-input"
-                placeholder="Street address"
+                :placeholder="$t('pages.cart.billing_address')"
               />
             </div>
             <div class="mb-4">
-              <label class="block text-gray-700 dark:text-gray-300">Billing City</label>
+              <label class="block text-gray-700 dark:text-gray-300">{{ $t('pages.cart.billing_city') }}</label>
               <input
                 v-model="form.billing_city"
                 required
                 class="form-input"
-                placeholder="City"
+                :placeholder="$t('pages.cart.billing_city')"
               />
             </div>
             <div class="mb-4">
-              <label class="block text-gray-700 dark:text-gray-300">Billing Postal Code</label>
+              <label class="block text-gray-700 dark:text-gray-300">{{ $t('pages.cart.billing_postal_code') }}</label>
               <input
                 v-model="form.billing_postal_code"
                 required
                 class="form-input"
-                placeholder="Postal Code"
+                :placeholder="$t('pages.cart.billing_postal_code')"
               />
             </div>
           </div>
 
-
           <div class="mb-4">
-            <label class="block text-gray-700 dark:text-gray-300">Phone</label>
+            <label class="block text-gray-700 dark:text-gray-300">{{ $t('pages.cart.phone') }}</label>
             <input
               v-model="form.phone"
               required
               class="form-input"
-              placeholder="Enter your phone number"
+              :placeholder="$t('pages.cart.phone')"
             />
           </div>
           <button
             type="submit"
             class="btn btn-success w-full px-6 py-3 rounded-lg"
           >
-            Checkout
+            {{ $t('pages.cart.checkout') }}
           </button>
         </form>
       </div>
@@ -230,7 +229,7 @@ watch(
 );
 
 async function removeItem(productId){
-  if (window.confirm('Are you sure you want to remove this item from the cart?')){
+  if (window.confirm($t('pages.cart.remove') + '?')){
     cart.removeFromCart(productId);
   }
 }
@@ -254,9 +253,9 @@ async function checkout() {
     };
     await http.post("/orders", payload);
     cart.clearCart();
-    alert("Order placed successfully!");
+    alert($t('pages.cart.checkout') + " " + $t('pages.cart.success'));
   } catch (error) {
-    alert("Checkout failed: " + (error.response?.data?.message || error.message));
+    alert($t('pages.cart.checkout') + " " + $t('pages.cart.failed') + ": " + (error.response?.data?.message || error.message));
   }
 }
 </script>

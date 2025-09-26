@@ -5,6 +5,9 @@ import piniaPluginPersistedstate from 'pinia-plugin-persistedstate'
 import { plugin, defaultConfig } from '@formkit/vue'
 import config from '../formkit.config.js'
 import { http } from '@utils/http.mjs'
+import en from '@/locales/en.mjs'
+import hu from '@/locales/hu.mjs'
+import { createI18n } from 'vue-i18n'
 
 import App from '@/App.vue'
 
@@ -17,6 +20,18 @@ const pinia = createPinia()
 pinia.use(piniaPluginPersistedstate)
 
 app.use(router)
+
+const i18n = createI18n({
+  legacy: false,
+  locale: 'en',
+  messages: {
+    en,
+    hu
+  }
+})
+
+app.use(i18n)
+
 app.use(plugin, defaultConfig(config))
 app.use(pinia)
 

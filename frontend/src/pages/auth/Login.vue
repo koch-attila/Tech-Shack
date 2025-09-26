@@ -3,11 +3,11 @@
   <div class="mt-16 flex justify-center bg-gray-100 dark:bg-gray-900">
     <div class="w-full max-w-md bg-white dark:bg-gray-800 rounded-xl shadow-md p-8">
       <h1 class="text-2xl font-bold text-center mb-6 text-gray-900 dark:text-white">
-        Login
+        {{ $t('pages.login.title') }}
       </h1>
       <form @submit.prevent="submit" class="space-y-4">
         <div>
-          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Email</label>
+          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ $t('pages.login.email') }}</label>
           <input
             v-model="form.email"
             type="email"
@@ -16,7 +16,7 @@
           />
         </div>
         <div>
-          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Password</label>
+          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ $t('pages.login.password') }}</label>
           <input
             v-model="form.password"
             type="password"
@@ -31,13 +31,13 @@
           type="submit"
           class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg shadow focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50"
         >
-          Login
+          {{ $t('pages.login.button') }}
         </button>
       </form>
       <p class="mt-4 text-center text-sm text-gray-600 dark:text-gray-400">
-        Don't have an account?
+        {{ $t('pages.login.no_account') }}
         <router-link to="/register" class="text-blue-600 dark:text-blue-400 hover:underline">
-          Register
+          {{ $t('pages.login.register') }}
         </router-link>
       </p>
     </div>

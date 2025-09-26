@@ -3,12 +3,12 @@
   <div class="mt-16 flex justify-center bg-gray-100 dark:bg-gray-900">
     <div class="w-full max-w-md bg-white dark:bg-gray-800 rounded-xl shadow-md p-8">
       <h1 class="text-2xl font-bold text-center mb-6 text-gray-900 dark:text-white">
-        Create an Account
+        {{ $t('pages.register.title') }}
       </h1>
 
       <form @submit.prevent="handleRegister" class="space-y-4">
         <div>
-          <label for="name" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Full Name</label>
+          <label for="name" class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ $t('pages.register.name') }}</label>
           <input
             id="name"
             v-model="form.name"
@@ -19,7 +19,7 @@
         </div>
 
         <div>
-          <label for="email" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Email</label>
+          <label for="email" class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ $t('pages.register.email') }}</label>
           <input
             id="email"
             v-model="form.email"
@@ -30,7 +30,7 @@
         </div>
 
         <div>
-          <label for="password" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Password</label>
+          <label for="password" class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ $t('pages.register.password') }}</label>
           <input
             id="password"
             v-model="form.password"
@@ -42,7 +42,7 @@
         </div>
 
         <div>
-          <label for="password_confirmation" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Confirm Password</label>
+          <label for="password_confirmation" class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ $t('pages.register.password_confirmation') }}</label>
           <input
             id="password_confirmation"
             v-model="form.password_confirmation"
@@ -62,14 +62,14 @@
           :disabled="loading"
           class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg shadow focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50"
         >
-          {{ loading ? "Registering..." : "Register" }}
+          {{ loading ? $t('pages.register.button') + '...' : $t('pages.register.button') }}
         </button>
       </form>
 
       <p class="mt-4 text-center text-sm text-gray-600 dark:text-gray-400">
-        Already have an account?
+        {{ $t('pages.register.already_account') }}
         <router-link to="/login" class="text-blue-600 dark:text-blue-400 hover:underline">
-          Log in
+          {{ $t('pages.register.login') }}
         </router-link>
       </p>
     </div>

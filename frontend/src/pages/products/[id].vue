@@ -22,11 +22,11 @@
             class="mt-6 px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg"
             @click="addToCart"
           >
-            Add to Cart
+            {{ $t('pages.home.products') }}
           </button>
           <div class="mt-6">
             <h2 class="text-xl font-semibold text-gray-900 dark:text-white mb-2">
-              Categories
+              {{ $t('pages.categories.title') }}
             </h2>
             <ul class="flex flex-wrap gap-2">
               <li
@@ -47,11 +47,11 @@
     </div>
     <div class="my-12">
       <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-4">
-        Reviews
+        {{ $t('pages.home.reviews') }}
       </h2>
 
       <div v-if="!reviews.length" class="text-gray-600 dark:text-gray-400">
-        No reviews yet.
+        {{ $t('pages.home.no_reviews') }}
       </div>
 
       <ul v-else class="space-y-6">
@@ -62,17 +62,17 @@
         >
           <div class="flex items-center justify-between">
             <span class="font-semibold text-gray-800 dark:text-gray-200">
-              {{ review.user.name || "Anonymous" }}
+              {{ review.user.name || $t('pages.home.anonymous') }}
             </span>
             <span class="text-yellow-500">
               {{ '★'.repeat(Number(review.rating) || 0) }}{{ '☆'.repeat(5 - (Number(review.rating) || 0)) }}
             </span>
           </div>
           <p class="mt-2 text-gray-700 dark:text-gray-300">
-            {{ review.comment || "No comment provided." }}
+            {{ review.comment || $t('pages.home.no_comment') }}
           </p>
           <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">
-            {{ review.created_at ? new Date(review.created_at).toLocaleDateString() : "Unknown date" }}
+            {{ review.created_at ? new Date(review.created_at).toLocaleDateString() : $t('pages.home.unknown_date') }}
           </p>
         </li>
       </ul>
@@ -100,7 +100,7 @@ const cart = useCartStore();
 function addToCart() {
   if (product.value) {
     cart.addToCart(product.value);
-    alert("Product added to cart!");
+    alert($t('pages.home.product_added'));
   }
 }
 
