@@ -1,5 +1,6 @@
 <template>
-  <div class="min-h-screen flex items-center justify-center bg-gray-100 dark:bg-gray-900">
+  <BaseHeader />
+  <div class="mt-16 flex justify-center bg-gray-100 dark:bg-gray-900">
     <div class="w-full max-w-md bg-white dark:bg-gray-800 rounded-xl shadow-md p-8">
       <h1 class="text-2xl font-bold text-center mb-6 text-gray-900 dark:text-white">
         Create an Account
@@ -79,6 +80,7 @@
 import { ref } from "vue"
 import { useRouter } from "vue-router"
 import { useAuthStore } from "@/stores/AuthStore"
+import BaseHeader from "@components/layout/BaseHeader.vue"
 
 const router = useRouter()
 const auth = useAuthStore()
