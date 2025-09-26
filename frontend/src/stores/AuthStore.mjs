@@ -15,15 +15,11 @@ export const useAuthStore = defineStore("auth", {
 
     async register(payload) {
       try {
-        await http.get('/sanctum/csrf-cookie', { baseURL: "http://backend.vm1.test", withCredentials: true });
         await http.post("/auth/register", payload);
         await this.fetchUser();
         return true;
       } catch (error) {
         if (error.response?.status === 419) {
-          this.deleteCookie('tech_shack_session');
-          this.deleteCookie('XSRF-TOKEN');
-          await http.get('/sanctum/csrf-cookie', { baseURL: "http://backend.vm1.test", withCredentials: true });
           await http.post("/auth/register", payload);
           await this.fetchUser();
           return true;
@@ -33,15 +29,11 @@ export const useAuthStore = defineStore("auth", {
     },
     async login(payload) {
       try {
-        await http.get('/sanctum/csrf-cookie', { baseURL: "http://backend.vm1.test", withCredentials: true });
         await http.post("/auth/login", payload);
         await this.fetchUser();
         return true;
       } catch (error) {
         if (error.response?.status === 419) {
-          deleteCookie('tech_shack_session');
-          deleteCookie('XSRF-TOKEN');
-          await http.get('/sanctum/csrf-cookie', { baseURL: "http://backend.vm1.test", withCredentials: true });
           await http.post("/auth/login", payload);
           await this.fetchUser();
           return true;
@@ -59,16 +51,11 @@ export const useAuthStore = defineStore("auth", {
     },
     async logout() {
       try {
-        await http.get('/sanctum/csrf-cookie', { baseURL: "http://backend.vm1.test", withCredentials: true });
         await http.post("/auth/logout");
       } catch (error) {
-        this.deleteCookie('tech_shack_session');
-        this.deleteCookie('XSRF-TOKEN');
         this.user = null;
         return;
       }
-      this.deleteCookie('tech_shack_session');
-      this.deleteCookie('XSRF-TOKEN');
       this.user = null;
     },
   },
