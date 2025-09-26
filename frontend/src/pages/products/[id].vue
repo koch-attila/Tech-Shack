@@ -87,6 +87,9 @@ import { http } from "@utils/http.mjs";
 import { useCartStore } from "@stores/CartStore.mjs";
 import BaseLayout from "@layouts/BaseLayout.vue";
 import { getCurrentInstance } from "vue";
+import { useI18n } from "vue-i18n";
+
+const { t } = useI18n();
 
 const { appContext } = getCurrentInstance();
 const baseUrl = appContext.config.globalProperties.$backendUrl;
@@ -100,7 +103,7 @@ const cart = useCartStore();
 function addToCart() {
   if (product.value) {
     cart.addToCart(product.value);
-    alert($t('pages.home.product_added'));
+    alert(t('pages.home.product_added'));
   }
 }
 
